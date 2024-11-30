@@ -1,32 +1,60 @@
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * Delete the template below * * * * * * * * * -->
-<!-- * * * * * * * to get started with your project! * * * * * * * -->
-<!-- * *git commit -m "Initial commit"
-  
-  <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-  <!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
-  <!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
-  <!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * * -->
-  <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-  <!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
-  <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-  <button (click)="showGreeting()">Bonjour</button><br>
-  <input type="text" [(ngModel)]="enteredText">
-  <button (click)="extractText()">Ajouter</button>
-  <button (click)="deleteLastItem()">Supprimer</button>
-  <button (click)="toggleRandomColoring()">{{ buttonLabel }}</button>
-  <button (click)="toggleSortingMode()">{{ sortingModeLabel }}</button>
-  <ul>
-    <li *ngFor="let item of listItems; let i = index" [ngStyle]="{ 'color': getColor(i) }">{{ item.text }}</li>
-  </ul>
-  <router-outlet></router-outlet>
-  
-  
+<!-- Interface utilisateur pour afficher un message, ajouter/supprimer des éléments et gérer des couleurs/tri -->
 
+<!-- Afficher le bouton qui déclenche un message de bienvenue -->
+<button (click)="showGreeting()" aria-label="Afficher un message de bienvenue">Bonjour</button><br>
 
+<!-- Zone de saisie pour ajouter un élément à la liste -->
+<input 
+  type="text" 
+  [(ngModel)]="enteredText" 
+  placeholder="Entrez un élément" 
+  aria-label="Saisir un élément" 
+  (keyup.enter)="extractText()">
+<!-- Permet d'ajouter l'élément en appuyant sur "Entrée" -->
 
+<!-- Bouton pour ajouter un élément -->
+<button 
+  (click)="extractText()" 
+  [disabled]="!enteredText.trim()" 
+  aria-label="Ajouter l'élément">
+  Ajouter
+</button>
+<!-- Le bouton est désactivé si le champ est vide -->
 
+<!-- Bouton pour supprimer le dernier élément de la liste -->
+<button 
+  (click)="deleteLastItem()" 
+  [disabled]="listItems.length === 0" 
+  aria-label="Supprimer le dernier élément">
+  Supprimer
+</button>
+<!-- Le bouton est désactivé si la liste est vide -->
+
+<!-- Bouton pour activer/désactiver la coloration aléatoire des éléments -->
+<button 
+  (click)="toggleRandomColoring()" 
+  aria-label="Activer/Désactiver la couleur aléatoire">
+  {{ buttonLabel }}
+</button>
+
+<!-- Bouton pour activer/désactiver le mode de tri de la liste -->
+<button 
+  (click)="toggleSortingMode()" 
+  aria-label="Activer/Désactiver le tri des éléments">
+  {{ sortingModeLabel }}
+</button>
+
+<!-- Liste des éléments avec un style conditionnel basé sur l'index -->
+<ul *ngIf="listItems.length > 0; else emptyList">
+  <li *ngFor="let item of listItems; let i = index" [ngStyle]="{ 'color': getColor(i) }">
+    {{ item.text }}
+  </li>
+</ul>
+
+<!-- Template alternatif si la liste est vide -->
+<ng-template #emptyList>
+  <p>Aucun élément dans la liste. Ajoutez-en un en utilisant le champ de saisie ci-dessus.</p>
+</ng-template>
+
+<!-- Le router-outlet est un emplacement pour afficher les composants associés aux routes -->
+<router-outlet></router-outlet>
